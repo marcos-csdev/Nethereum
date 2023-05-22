@@ -9,6 +9,8 @@ var config = new ConfigurationBuilder()
 
 
 var startup = new Startup(config);
-await startup.ReturnAccountBalance();
+//await startup.ReturnAccountBalance();
+var transaction = await startup.CreateSimpleTransaction();
+var walletReceipt = await startup.CreateHdWalletTransaction();
 
 Console.WriteLine($"Hello, {config["InfuraApiKey"]}");

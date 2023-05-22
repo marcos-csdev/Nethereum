@@ -7,7 +7,7 @@ using Nethereum.Web3;
 
 namespace NethereumSample
 {
-    public class Account
+    public static class WalletAccount
     {
         public static async Task GetAccountBalance(string apiKey, string ethereumAccount)
         {
