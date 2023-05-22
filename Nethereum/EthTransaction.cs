@@ -43,5 +43,15 @@ namespace NethereumSample
 
             return transaction;
         }
+
+        public static async Task<string> TransactBetweenAccounts(string destinationAddress)
+        {
+            var senderAccount = NethereumAccount.GenerateNewAccount();
+            var web3 = new Web3(senderAccount);
+
+            var transaction = await web3.TransactionManager.SendTransactionAsync(senderAccount.Address, destinationAddress, new HexBigInteger(20));
+
+            return transaction;
+        }
     }
 }

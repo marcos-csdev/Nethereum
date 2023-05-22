@@ -9,45 +9,75 @@ namespace NethereumSample
 {
     public class Startup
     {
-        public Startup(IConfigurationRoot configuration)
+        protected readonly Serilog.ILogger _logger;
+        public IConfigurationRoot Configuration { get; }
+        public Startup(IConfigurationRoot configuration, Serilog.ILogger logger)
         {
             Configuration = configuration;
+            _logger = logger;
         }
-        public IConfigurationRoot Configuration { get; }
         
         public async Task ReturnAccountBalance()
         {
-            var infuraApiKey = Configuration["InfuraApiKey"];
-            var ethereumAccount = Configuration["EthereumFoundationAccount"];
+            try
+            {
+                var infuraApiKey = Configuration["InfuraApiKey"];
+                var ethereumAccount = Configuration["EthereumFoundationAccount"];
 
-            if (string.IsNullOrWhiteSpace(infuraApiKey) || string.IsNullOrWhiteSpace(ethereumAccount)) return;
+                if (string.IsNullOrWhiteSpace(infuraApiKey) || string.IsNullOrWhiteSpace(ethereumAccount)) return;
 
-            await WalletAccount.GetAccountBalance(infuraApiKey, ethereumAccount);
+                await WalletAccount.GetAccountBalance(infuraApiKey, ethereumAccount);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public async Task<TransactionReceipt> CreateSimpleTransaction()
         {
-            var privateKey = Configuration["privateKey"];
-            var address = Configuration["recipientAddress"];
+            try
+            {
+                var privateKey = Configuration["privateKey"];
+                var address = Configuration["recipientAddress"];
 
-            if (string.IsNullOrWhiteSpace(privateKey) || string.IsNullOrWhiteSpace(address)) return null!;
+                if (string.IsNullOrWhiteSpace(privateKey) || string.IsNullOrWhiteSpace(address)) return null!;
 
-            var transactionReceipt = await EthTransaction.CreateSimpleTransaction(privateKey, address);
+                var transactionReceipt = await EthTransaction.CreateSimpleTransaction(privateKey, address);
 
-            return transactionReceipt;
+                return transactionReceipt;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                Console.WriteLine(ex.Message);
+            }
+
+            return null!;
         }
         public async Task<TransactionReceipt> CreateHdWalletTransaction()
         {
-            var address = Configuration["recipientAddress"];
-            var passphrase = Configuration["passphrase"];
-            var password = Configuration["password"];
+            try
+            {
+                var address = Configuration["recipientAddress"];
+                var passphrase = Configuration["passphrase"];
+                var password = Configuration["password"];
 
-            if (string.IsNullOrWhiteSpace(passphrase) ||string.IsNullOrWhiteSpace(password) || 
-                string.IsNullOrWhiteSpace(address)) return null!;
+                if (string.IsNullOrWhiteSpace(passphrase) || string.IsNullOrWhiteSpace(password) ||
+                    string.IsNullOrWhiteSpace(address)) return null!;
 
-            var transactionReceipt = await EthTransaction.CreateHdWalletTransaction(address, passphrase, password);
+                var transactionReceipt = await EthTransaction.CreateHdWalletTransaction(address, passphrase, password);
 
-            return transactionReceipt;
+                return transactionReceipt;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                Console.WriteLine(ex.Message);
+            }
+
+            return null!;
         }
 
     }

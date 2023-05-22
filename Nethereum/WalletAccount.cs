@@ -9,6 +9,11 @@ namespace NethereumSample
 {
     public static class WalletAccount
     {
+        public static async Task GetAccount()
+        {
+
+        }
+
         public static async Task GetAccountBalance(string apiKey, string ethereumAccount)
         {
             var url = $"https://mainnet.infura.io/v3/{apiKey}";
